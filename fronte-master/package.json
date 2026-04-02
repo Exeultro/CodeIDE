@@ -1,0 +1,31 @@
+{
+  "name": "fronte",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/fix-monaco-paths.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.55.1",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.31",
+    "vue-router": "^4.6.4",
+    "xterm": "^5.3.0",
+    "y-monaco": "^0.1.6",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.30"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.5",
+    "esbuild": "^0.27.4",
+    "vite": "^8.0.3",
+    "vite-plugin-monaco-editor": "^1.1.0",
+    "vite-plugin-vue-devtools": "^8.1.1"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}
