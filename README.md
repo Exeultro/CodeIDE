@@ -68,7 +68,7 @@ npm run dev
 Фронтенд будет доступен по адресу: http://localhost:5173/web/
 
 Структура проекта
-
+```
 CodeIDE/
 ├── collab-ide-backend/          # Бэкенд на Go
 │   ├── cmd/
@@ -94,7 +94,7 @@ CodeIDE/
     │   └── router/              # Маршрутизация
     ├── package.json
     └── vite.config.ts
-
+```
 
 🔧 Команды для управления
 Бэкенд
