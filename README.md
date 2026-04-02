@@ -223,6 +223,7 @@ npm install
 Ошибка подключения к Yjs
 Убедитесь, что Yjs сервер запущен:
 
-bash
+```bash
 docker ps | grep yjs
 curl http://localhost:1234/health
+```
