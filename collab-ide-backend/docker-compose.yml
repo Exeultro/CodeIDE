@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: collabide-postgres
+    environment:
+      POSTGRES_DB: collabide
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - collabide-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: collabide-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - collabide-network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: collabide-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    restart: unless-stopped
+    networks:
+      - collabide-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: collabide-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    environment:
+      PORT: 8080
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: secret
+      DB_NAME: collabide
+      REDIS_HOST: redis:6379
+      REDIS_PASSWORD: ""
+      OLLAMA_URL: http://ollama:11434
+      OLLAMA_MODEL: gemma3:1b
+      JWT_SECRET: supersecret
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174,http://localhost:8000,http://localhost:8001
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+      - collabide-network
+
+  yjs-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.yjs
+    container_name: collabide-yjs
+    ports:
+      - "1234:1234"
+    restart: unless-stopped
+    networks:
+      - collabide-network
+
+networks:
+  collabide-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  ollama_data:
