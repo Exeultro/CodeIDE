@@ -152,7 +152,7 @@ curl -X POST http://localhost:8080/api/sessions \
 
 🤖 Telegram бот
 Найдите бота в Telegram: @CollabIDEhacaton_bot
-
+(Работает при запуске бэкенда, но надо включать ВПН!(иначе не даёт доступ к апи Телеграмма)
 Авторизуйтесь: /login testuser test123
 
 Получите список сессий: /sessions
